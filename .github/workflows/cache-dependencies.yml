@@ -3,7 +3,7 @@ name: CI with Dependency Caching
 on:
   push:
     branches:
-      - main  # Or master, depending on your default branch
+      - main 
 
 jobs:
   build:
@@ -11,21 +11,30 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      
+      # Add this step to prepare the Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
       # --- 1. Cache Step ---
       - name: prime-cache-c46fbd2
-        id: cache-dependencies  # Assign an ID to reference the output
+        id: cache-dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.npm  # Example: Change this path based on your project's dependencies (e.g., ~/.npm, ~/.m2, vendor/, etc.)
-          key: cache-c46fbd2-${{ hashFiles('package-lock.json') }} # Key includes the fixed name and a hash of a file that changes when dependencies update
+          # Path to the pip cache directory
+          path: ~/.cache/pip  
+          # Key based on the required name and hashing requirements.txt
+          key: cache-c46fbd2-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             cache-c46fbd2-
 
       # --- 2. Prime/Dependency Installation Step ---
+      # This step only runs if the cache misses (first run or requirements.txt changed)
       - name: Install Dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: npm install  # Example: Change this command to your actual dependency installation (e.g., pip install -r requirements.txt, composer install, etc.)
+        run: pip install -r requirements.txt
       
       # --- 3. Cache Hit/Miss Echo Step (The requirement) ---
       - name: Echo Cache Result
