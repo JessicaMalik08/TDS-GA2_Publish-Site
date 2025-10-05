@@ -6,40 +6,13 @@ on:
       - main 
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # Setup Python environment before installing dependencies
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      # --- 1. Cache Step (Named exactly as required) ---
       - name: prime-cache-c46fbd2
-        id: cache-dependencies
-        uses: actions/cache@v4
-        with:
-          # Caching the standard pip cache directory
-          path: ~/.cache/pip  
-          # Key based on the required prefix and hashing requirements.txt
-          key: cache-c46fbd2-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            cache-c46fbd2-
+        uses: actions/checkout@v3
 
-      # --- 2. Dependency Installation Step ---
-      # Runs only if the cache misses (first time or requirements.txt changed)
-      - name: Install Dependencies
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: pip install -r requirements.txt
-      
-      # --- 3. Cache Hit/Miss Echo Step (Required for verification) ---
-      - name: Echo Cache Result
-        run: echo "Cache hit status for cache-c46fbd2: ${{ steps.cache-dependencies.outputs.cache-hit }}"
-
-      # --- 4. Example: Run Tests (Placeholder) ---
-      - name: Run Tests
-        run: echo "Running tests after setup..."
+      - name: 24f2000662@ds.study.iitm.ac.in
+        run: echo "Hello, world!"
+        
+        
